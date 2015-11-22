@@ -46,80 +46,37 @@ var var1 = [{
 
 const allFilters = fromJS({
     filtersByID : {
-        filterBrand1 : {
-            label: "Calvin Klein",
-            numItems : 23,
-            checked : false
-        },
-        filterBrand2 : {
-            label: "Gucci",
-            numItems : 4,
-            checked : false
-        },
-        filterBrand3 : {
-            label : "Adidas",
-            numItems : 0,
-            checked : false
-        },
-        filterBrand4 : {
-            label : "Puma",
-            numItems : 6,
-            checked : false
-        },
-        filterPriceRange1 : {
-            label: "$5 to $9.99",
-            numItems: 3,
-            checked: false
-        },
-        filterPriceRange2 : {
-            label: "$10 to $19.99",
-            numItems: 2,
-            checked: false
-        },
-        filterPriceRange3 : {
-            label: "$20 to $29.99",
-            numItems: 7,
-            checked: false
-        },
-        filterPriceRange4 : {
-            label: "$30 >",
-            numItems: 7,
-            checked: false
-        },
-        filterSizeSmall : {
-            label: "S",
-            numItems: 1,
-            checked: false
-        },
-        filterSizeMedium : {
-            label: "M",
-            numItems: 2,
-            checked: false
-        },
-        filterSizeLarge : {
-            label: "L",
-            numItems: 3,
-            checked: false
-        },
-        filterSizeExtraLarge : {
-            label: "XL",
-            numItems: 4,
-            checked: false
-        }
+        filterMaterialGold : {label: "Gold"},
+        filterMaterialSilver : {label: "Silver"},
+        filterMaterialGlass : {label: "Glass"},
+        filterMaterialGS : {label: "Gem Stone"},
+        filterMaterialRG : {label: "Rose Gold"},
+        filterMaterialAG : {label: "Antique Gold"},
+        filterMaterialAS : {label: "Antique Silver"},
+        filterMaterialBrass : {label: "Brass"},
+        filterMaterialLC : {label: "Leather Chording"},
+        filterPriceRange1 : {label: "$5 to $9.99"},
+        filterPriceRange2 : {label: "$10 to $19.99"},
+        filterPriceRange3 : {label: "$20 to $29.99"},
+        filterPriceRange4 : {label: "$30 >"},
+        filterStyleKnotted : {label: "Knotted"},
+        filterStyleVintage : {label: "Vintage"},
+        filterStyleMacrame : {label: "Macrame"}
     },
 
     filterTypes : {
-        filterTypeBrands : {
-            label: "Brands",
-            items: ["filterBrand1", "filterBrand2", "filterBrand3", "filterBrand4"]
+        filterTypeMaterial : {
+            label: "Material",
+            items: ["filterMaterialGold", "filterMaterialSilver", "filterMaterialGlass", "filterMaterialGS", "filterMaterialRG",
+                "filterMaterialAG", "filterMaterialAS", "filterMaterialBrass", "filterMaterialLC"]
         },
         filterTypePrice : {
             label: "Price",
             items: ["filterPriceRange1", "filterPriceRange2", "filterPriceRange3", "filterPriceRange4"]
         },
-        filterTypeSize : {
-            label: "Size",
-            items: ["filterSizeSmall", "filterSizeMedium", "filterSizeLarge", "filterSizeExtraLarge"]
+        filterTypeStyle : {
+            label: "Style",
+            items: ["filterStyleKnotted", "filterStyleVintage", "filterStyleMacrame"]
 
         }
     }
@@ -143,9 +100,8 @@ function getAllFilters() {
             const filter = getFilterByID(filterID);
 
             filterGroup.items[filterID] = {
-                name : filter.get("label"),
-                numItems : filter.get("numItems"),
-                checked : filter.get("checked")
+                id : filterID,
+                name : filter.get("label")
             }
         });
 
