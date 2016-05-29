@@ -2,46 +2,20 @@ import {fromJS, Map} from "immutable";
 import {
     GET_FILTERS,
     GET_FILTER_BY_ID,
-    TOGGLE_FILTER
+    SELECT_FILTER
 } from "../constants/ActionTypes";
 
 const initialState = new Map();
 
 var var1 = [{
-    label: "Material",
-    types: [
-        "gold", "silver", "glass", "gem stone", "rose gold", "antique gold", "antique silver", "brass", "leather chording"
-    ]
-},{
-    label: "Style",
-    types: [
-        "Knotted", "vintage", "Macrame"
-    ]
-},{
     label: "Bracelet Type",
-    types: [
-        "Wrap"
-    ]
+    types: ["Wrap"]
 },{
     label: "Necklace type",
-    types: [
-        "choker", "chained", "lariat"
-    ]
+    types: ["choker", "chained", "lariat"]
 },{
     label: "earring type",
-    types: [
-        "hoop", "dangle"
-    ]
-},{
-    label: "",
-    types: [
-        "", ""
-    ]
-},{
-    label: "",
-    types: [
-        "", ""
-    ]
+    types: ["hoop", "dangle"]
 }];
 
 const allFilters = fromJS({
@@ -113,13 +87,9 @@ export default function filters(state = initialState, action = {type : "NONE"}) 
     switch (action.type) {
         case GET_FILTERS :
             return state.set("allFilters", getAllFilters());
+
         case GET_FILTER_BY_ID :
             return state.set("filter", getFilterByID(action.id));
-
-        //case TOGGLE_FILTER :
-        //    return state.set("list", allProducts.get("productsByID").filter((product) => {
-        //        return product.get("categories").includes(action.categoryID)
-        //    }));
     }
 
     return state;

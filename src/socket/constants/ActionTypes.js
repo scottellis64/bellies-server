@@ -7,4 +7,9 @@ export const GET_CATEGORY_BY_ID = "GET_CATEGORY_BY_ID";
 
 export const GET_FILTERS = "GET_FILTERS";
 export const GET_FILTER_BY_ID = "GET_FILTER_BY_ID";
-export const TOGGLE_FILTER = "TOGGLE_FILTER";
+export const SELECT_FILTER = "SELECT_FILTER";
+
+export const CREATE_ACCOUNT = "CREATE_ACCOUNT";
+export const SET_ACCOUNT_FIELD = "SET_ACCOUNT_FIELD";
+export const LOGIN = "LOGIN";
+export const LOGIN_RESPONSE = "LOGIN_RESPONSE";

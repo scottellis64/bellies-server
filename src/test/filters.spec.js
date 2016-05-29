@@ -15,11 +15,11 @@ describe('filters', () => {
         const store = createServerStore();
         store.dispatch({
             type: GET_FILTER_BY_ID,
-            id : "filterBrand4"
+            id : "filterMaterialGold"
         });
 
         const filter = store.getState().filters.get("filter");
-        expect(filter.get("label")).toBe("Puma");
+        expect(filter.get("label")).toBe("Gold");
     });
 
     it('can get filters organized by type', () => {
@@ -32,24 +32,13 @@ describe('filters', () => {
         const allFilters = filters.get("allFilters");
 
         const filterIDs = allFilters.map((obj, id) => {
-            //obj.items.forEach(item => {
-            //    console.log(item);
-            //});
-
-            console.log(obj.items);
-
             return id;
         }).toArray();
-        expect(filterIDs).toEqual(["filterTypeBrands", "filterTypePrice", "filterTypeSize"]);
+        expect(filterIDs).toEqual(["filterTypeMaterial", "filterTypePrice", "filterTypeStyle"]);
 
         const filterNames = allFilters.map((obj) => {
             return obj.name;
         }).toArray();
-        expect(filterNames).toEqual(["Brands", "Price", "Size"]);
-
-        //allFilters.forEach( (filterObj, filterName) => {
-        //    console.log(filterObj);
-        //    console.log(filterName);
-        //});
+        expect(filterNames).toEqual(["Material", "Price", "Style"]);
     })
 });

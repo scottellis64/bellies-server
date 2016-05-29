@@ -1,11 +1,13 @@
 import {
     fromJS,
-    Map
+    Map,
+    List
 } from "immutable";
 
 import {
     GET_PRODUCTS,
-    GET_PRODUCTS_BY_CATEGORY
+    GET_PRODUCTS_BY_CATEGORY,
+    SELECT_FILTER
 } from "../constants/ActionTypes";
 
 const initialState = new Map();
@@ -192,6 +194,34 @@ const allProducts = fromJS({
     }
 });
 
+function selectFilter(state, filterID, selected) {
+    const filters = state.get("allFilters");
+    console.log(state);
+
+    let selectedFilters = state.get("selectedFilters");
+    if (! selectedFilters) {
+        if (selected) {
+            selectedFilters = List.of(filterID);
+        }
+    } else {
+        let filterIndex = selectedFilters.indexOf(filterID);
+        if (selected && filterIndex == -1) {
+            selectedFilters = selectedFilters.add(filterID);
+        } else if (! selected && filterIndex > -1) {
+            selectedFilters = selectedFilters.remove(filterIndex);
+        }
+    }
+
+    return filterProductsBySelectedFilters(state.set("selectedFilters", selectedFilters));
+}
+
+function filterProductsBySelectedFilters(state) {
+    const selectedFilters = state.get("selectedFilters");
+    return state.set("list", allProducts.get("productsByID").filter((product) => {
+        return product.get("filters").some(filterID => {return selectedFilters.contains(filterID);});
+    }));
+}
+
 export default function products(state = initialState, action = {type : "NONE"}) {
     switch (action.type) {
         case GET_PRODUCTS :
@@ -201,6 +231,9 @@ export default function products(state = initialState, action = {type : "NONE"})
             return state.set("list", allProducts.get("productsByID").filter((product) => {
                 return product.get("categories").includes(action.categoryID)
             }));
+
+        case SELECT_FILTER :
+            return selectFilter(state, action.filterID, action.selected);
     }
 
     return state;

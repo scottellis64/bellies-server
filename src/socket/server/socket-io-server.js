@@ -1,6 +1,12 @@
 import Server from "socket.io";
+import BelliesDb from "../../../src/db/BelliesDb";
 
-function getResponse(state) {
+import {LOGIN, LOGIN_RESPONSE} from "../constants/ActionTypes";
+
+let belliesDb = null;
+let socket = null;
+
+function getResponseOld(state) {
     const products = state.products;
     const categories = state.categories;
     const filters = state.filters;
@@ -38,27 +44,72 @@ function getResponse(state) {
         }
     }
 
+    let selectedFilters = state.selectedFilters;
+    if (selectedFilters) {
+        response.selectedFilters = selectedFilters.toJS();
+    }
+
     return response;
 }
 
-export default function startSocketServer(store) {
-    const io = new Server().attach(8090);
+function sendResponse(state) {
+    let response = {};
 
-    console.log("Starting up");
+    if (state.account && state.account.get("action") === LOGIN) {
+        let account = state.account;
+        account = account.delete("action");
+        response.action = LOGIN_RESPONSE;
+
+        belliesDb.login(account.get("email"), account.get("password"), function(accountData) {
+            response.account = account.merge(accountData).toJS();
+            console.log("Login response with state " + JSON.stringify(response));
+            socket.emit("state", response);
+        }, function(err) {
+            response.account = account.merge({
+                loggedIn : false,
+                failureReason : err
+            }).toJS();
+            console.log("Returning error login response " + JSON.stringify(response));
+            socket.emit("state", response);
+        });
+    } else {
+        console.log("General socket response with state " + JSON.stringify(response));
+        socket.emit("state", response);
+    }
+}
+
+function setActionAndDispatch(store, action) {
+    store.dispatch(action);
+}
+
+export default function startSocketServer(store) {
+    const isProduction = process.env.NODE_ENV && process.env.NODE_ENV == "production";
+
+    const server = isProduction ? "belliesbangles.com" : "localhost";
+    const dbPort = isProduction ? "8096" : null;
+    const socketPort = isProduction ? "8095" : "8095";
+    belliesDb = new BelliesDb(server, dbPort);
+
+    try {
+        belliesDb.setup();
+        //belliesDb.resetDatabase();
+    } catch (e) {
+        console.error(e);
+    }
+
+    socket = new Server().attach(socketPort);
 
     store.subscribe(
         () => {
-            io.emit("state", getResponse(store.getState()));
+            sendResponse(store.getState());
         }
     );
 
-    io.on('connection', (socket) => {
+    socket.on('connection', (socket) => {
         const state = store.getState();
         if (state) {
-            socket.emit("state", getResponse(store.getState()));
+            sendResponse(state);
             socket.on("action", store.dispatch.bind(store));
         }
     });
-
-    console.log("Listening");
 }
